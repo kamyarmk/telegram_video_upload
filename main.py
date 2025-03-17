@@ -7,8 +7,8 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=lo
 logger = logging.getLogger(__name__)
 
 # Bot Token and Admin Chat ID
-BOT_TOKEN = "7914138636:AAE_d4ugSbCcTrs_JjUvEjMaErJNJYUnrmQ"
-ADMIN_CHAT_ID = "8092260052"
+BOT_TOKEN = ""
+ADMIN_CHAT_ID = ""
 
 # Conversation states
 ASK_NAME, ASK_VIDEO = range(2)
