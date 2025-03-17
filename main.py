@@ -1,3 +1,8 @@
+import os
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
+
 from telegram import Update, Bot
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, ConversationHandler
 import logging
@@ -7,8 +12,8 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=lo
 logger = logging.getLogger(__name__)
 
 # Bot Token and Admin Chat ID
-BOT_TOKEN = ""
-ADMIN_CHAT_ID = ""
+BOT_TOKEN = BOT_TOKEN
+ADMIN_CHAT_ID = ADMIN_CHAT_ID
 
 # Conversation states
 ASK_NAME, ASK_VIDEO = range(2)
