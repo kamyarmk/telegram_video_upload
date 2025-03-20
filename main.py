@@ -18,7 +18,7 @@ BOT_TOKEN = "BOT_TOKEN"
 ADMIN_CHAT_ID = "ADMIN_CHAT_ID"
 
 # Conversation states
-ASK_NAME, ASK_AGE, ASK_INSTRUMENT, ASK_VIDEO = range(4)
+ASK_NAME, ASK_AGE, ASK_LAND, ASK_INSTRUMENT, ASK_VIDEO = range(5)
 
 # Dictionary to store user data
 temp_data = {}
@@ -44,7 +44,7 @@ async def start_command_callback(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()  # Use await for async
 
-    start_text = "اسم کودک خودتون رو وارد کنید"
+    start_text = "نام و نام خانوادگی کودک خودتون رو وارد کنید"
 
     await query.message.reply_text(start_text)
     await update.message.reply_text(" لطفا بگید چند سالشه")
@@ -55,7 +55,7 @@ async def start(update: Update, context: CallbackContext) -> int:
     chat_id = update.effective_chat.id
     keyboard = [[InlineKeyboardButton("🚀 شروع کنید", callback_data="start_command")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    welcome_text = "وقتتون بخیر \n به ربات تلگرامی آزاده شمس خوش آومدید.\n لطفا برای آپلود ویدیوی نوازندگی کودک خودتون دکمه شروع رو بزنید \n"
+    welcome_text = "وقتتون بخیر \n به ارکستر دانژه خوش اومدید.\nلطفا برای آپلود ویدیوی نوازندگی کودک خودتون دکمه شروع رو بزنید"
     # await update.message.reply_text("وقتتون بخیر \n به ربات تلگرامی آزاده شمس خوش آومدید.\n لطفا برای آپلود ویدیوی نوازندگی کودک خودتون دکمه شروع رو بزنید \n")
     await context.bot.send_message(chat_id=chat_id, text=welcome_text, reply_markup=reply_markup)
 
@@ -70,6 +70,12 @@ async def get_name(update: Update, context: CallbackContext) -> int:
 async def get_age(update: Update, context: CallbackContext) -> int:
     user_id = update.message.from_user.id
     temp_data[user_id]['age'] = update.message.text
+    await update.message.reply_text("کشور محل اقامتتون رو بنویسید")
+    return ASK_LAND
+
+async def get_country(update: Update, context: CallbackContext) -> int:
+    user_id = update.message.from_user.id
+    temp_data[user_id]['land'] = update.message.text
     await update.message.reply_text("سازی که مینوازه رو بنویسید")
     return ASK_INSTRUMENT
 
@@ -90,10 +96,10 @@ async def get_video(update: Update, context: CallbackContext) -> int:
     user_info = temp_data.get(user_id, {})
     await context.bot.send_message(
         chat_id=ADMIN_CHAT_ID,
-        text=f"New video from {user_info.get('name', 'Unknown')}, age: {user_info.get('age', 'Unknown')}, instrument: {user_info.get('instrument', 'Unknown')}"
+        text=f"ویدیوی جدید از {user_info.get('name', 'Unknown')},\n سن: {user_info.get('age', 'Unknown')},\n کشور: {user_info.get('land', 'Unknown')} \n ساز: {user_info.get('instrument', 'Unknown')} \n "
     )
     await context.bot.send_video(chat_id=ADMIN_CHAT_ID, video=video.file_id)
-    await update.message.reply_text("مرسی! ویدیو بررسی خواهد شد.")
+    await update.message.reply_text("مرسی که هنرنمایی کودک خودتون رو با ما به اشتراک گذاشتید به زودی بررسی می کنیم🙂")
     return ConversationHandler.END
 
 async def cancel(update: Update, context: CallbackContext) -> int:
@@ -118,6 +124,7 @@ def main():
         states={
             ASK_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_name)],
             ASK_AGE: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_age)],
+            ASK_LAND: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_country)],
             ASK_INSTRUMENT: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_instrument)],
             ASK_VIDEO: [MessageHandler(filters.VIDEO | filters.Document.VIDEO, get_video)],
         },
