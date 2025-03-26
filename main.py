@@ -76,7 +76,6 @@ async def error_handler(update: object, context: CallbackContext) -> int:
 # Commands menu
 async def show_main_menu(update: Update, context: CallbackContext, selected_lang) -> int:
     user_id = update.message.from_user.id
-    print(user_id)
     
     # lang = user_language.get(user_id, "fa")  # Default to Persian
     lang = selected_lang  # Default to Persian
@@ -106,8 +105,6 @@ async def handle_menu(update: Update, context: CallbackContext) -> int:
 
     user_id = update.message.from_user.id
     lang = user_language.get(user_id, "fa")
-
-    print(lang)
 
     if text == content[lang]["Contact_Us_btn"]:
         await update.message.reply_text("This bot allows you to upload videos for review.")
